@@ -15,7 +15,7 @@ export class App implements OnInit {
   constructor(private voteService: VoteService) {}
 
   ngOnInit() {
-    this.voteService.getCandidatos().subscribe({
+    this.voteService.getCandidates().subscribe({
       next: (data) => {
         this.candidatos = data;
         console.log('Candidatos recibidos:', data);

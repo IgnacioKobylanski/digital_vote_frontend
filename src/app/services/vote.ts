@@ -1,21 +1,26 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import {environment} from '../../environments/environment'
+import { environment } from '../../environments/environment';
+import { Candidate } from '../models/candidate.model';
+import { Vote } from '../models/vote.model';
+import { ElectionResult } from '../models/election-result.model';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class VoteService {
-  private apiUrl = environment.apiUrl;
+  private baseUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  getCandidatos(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/candidatos`);
+  getCandidates(): Observable<Candidate[]> {
+    return this.http.get<Candidate[]>(`${this.baseUrl}/candidates`);
   }
 
-  enviarVoto(idCandidato: number): Observable<any> {
-    return this.http.post(`${this.apiUrl}/votar`, { id: idCandidato });
+  submitVote(voteData: Vote): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/votes`, voteData);
+  }
+
+  getResults(): Observable<ElectionResult[]> {
+    return this.http.get<ElectionResult[]>(`${this.baseUrl}/candidates/results`);
   }
 }
