@@ -1,0 +1,14 @@
+<div class="login-card">
+  <h2>Ingreso de Votante</h2>
+  <p>Por favor, ingrese su DNI para continuar</p>
+
+  <input 
+    #dniInput
+    type="text" 
+    placeholder="Ej: 35123456"
+    (keyup.enter)="onLogin(dniInput.value)">
+
+  <button type="button" (mousedown)="onLogin(dniInput.value)">
+    Ingresar
+  </button>
+</div>

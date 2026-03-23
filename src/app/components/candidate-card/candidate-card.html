@@ -1,0 +1,21 @@
+<div class="card">
+  <div class="image-wrapper">
+    <img [src]="candidate.candidateImageUrl || 'assets/no-photo.png'" class="main-photo">
+         [alt]="candidate.name" 
+         class="main-photo">
+    
+    @if (candidate.partyLogoUrl) {
+      <img [src]="candidate.partyLogoUrl" class="party-badge">
+    }
+  </div>
+
+  <div class="card-info">
+    <h3>{{ candidate.name }}</h3>
+    <span class="party-tag">{{ candidate.party }}</span>
+    <p class="position">{{ candidate.position }}</p>
+    
+    <button (click)="voteClick()" class="btn-vote">
+      Vote Now
+    </button>
+  </div>
+</div>

@@ -1,26 +1,49 @@
-import { Component, OnInit } from '@angular/core';
-import { VoteService } from './services/vote'
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
+
+import { VoteService } from './services/vote';
+import { Voter } from './models/voter.model';
+import { Candidate } from './models/candidate.model';
+
+
+import { VoterLogin } from './components/voter-login/voter-login';
+import { CandidateCard } from './components/candidate-card/candidate-card';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, VoterLogin, CandidateCard],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrls: ['./app.scss']
 })
-export class App implements OnInit {
-  candidatos: any[] = [];
+export class AppComponent {
+  currentVoter: Voter | null = null;
+  candidates: Candidate[] = [];
+  errorMsg: string = '';
 
-  constructor(private voteService: VoteService) {}
+  constructor(
+    private voteService: VoteService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
-  ngOnInit() {
-    this.voteService.getCandidates().subscribe({
-      next: (data) => {
-        this.candidatos = data;
-        console.log('Candidatos recibidos:', data);
+  handleLogin(dni: string): void {
+    this.voteService.getVoterData(dni).subscribe({
+      next: (voter) => {
+        this.currentVoter = voter;
+        this.errorMsg = '';
+        this.loadCandidates();
+        this.cdr.detectChanges();
       },
-      error: (err) => console.error('Error al conectar con la API', err)
+      error: (err) => {
+        this.errorMsg = err.message;
+        this.currentVoter = null;
+        this.cdr.detectChanges();
+      }
     });
+  }
+
+  loadCandidates(): void {
+    console.log('Buscando candidatos para:', this.currentVoter?.fullName);
   }
 }

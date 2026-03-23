@@ -1,6 +1,10 @@
-<div class="container">
-  <h1>🗳️ Sistema de Votación</h1>
-  <hr>
-  
-  <p>Estado del sistema: Conectado</p>
-</div>
+<main class="pantalla-test">
+  <div *ngIf="!currentVoter">
+    <app-voter-login (login)="handleLogin($event)"></app-voter-login>
+    <p *ngIf="errorMsg">{{ errorMsg }}</p>
+  </div>
+
+  <div *ngIf="currentVoter">
+    <h1>Bienvenido, {{ currentVoter.fullName }}</h1>
+  </div>
+</main>
