@@ -1,11 +1,9 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-
 import { VoteService } from './services/vote';
 import { Voter } from './models/voter.model';
 import { Candidate } from './models/candidate.model';
-
 
 import { VoterLogin } from './components/voter-login/voter-login';
 import { CandidateCard } from './components/candidate-card/candidate-card';
@@ -28,6 +26,8 @@ export class AppComponent {
   ) {}
 
   handleLogin(dni: string): void {
+    this.errorMsg = ''; 
+
     this.voteService.getVoterData(dni).subscribe({
       next: (voter) => {
         this.currentVoter = voter;
@@ -36,7 +36,7 @@ export class AppComponent {
         this.cdr.detectChanges();
       },
       error: (err) => {
-        this.errorMsg = err.message;
+        this.errorMsg = err.error?.message || err.message || 'Error de conexión con el servidor';
         this.currentVoter = null;
         this.cdr.detectChanges();
       }

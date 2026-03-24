@@ -11,4 +11,8 @@
   <button type="button" (mousedown)="onLogin(dniInput.value)">
     Ingresar
   </button>
+
+  <div *ngIf="error" class="error-container">
+    {{ error }}
+  </div>
 </div>

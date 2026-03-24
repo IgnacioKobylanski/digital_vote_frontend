@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -9,12 +9,11 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./voter-login.scss']
 })
 export class VoterLogin {
-
+  @Input() error: string = ''; 
+  
   @Output() login = new EventEmitter<string>();
 
   onLogin(dni: string): void {
-    console.log("DNI directo:", dni);
-
     if (dni && dni.trim().length >= 8) {
       this.login.emit(dni);
     } else {
