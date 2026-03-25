@@ -7,11 +7,12 @@ import { Candidate } from './models/candidate.model';
 
 import { VoterLogin } from './components/voter-login/voter-login';
 import { CandidateCard } from './components/candidate-card/candidate-card';
+import { VoterDashboard } from './components/voter-dashboard/voter-dashboard';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, VoterLogin, CandidateCard],
+  imports: [CommonModule, VoterLogin, CandidateCard, VoterDashboard],
   templateUrl: './app.html',
   styleUrls: ['./app.scss']
 })

@@ -1,12 +1,12 @@
-<main class="pantalla-test">
-  <div *ngIf="!currentVoter">
-    <app-voter-login 
-      [error]="errorMsg" 
-      (login)="handleLogin($event)">
-    </app-voter-login>
-  </div>
+<main class="main-component">
+  <app-voter-login 
+    *ngIf="!currentVoter" 
+    [error]="errorMsg" 
+    (login)="handleLogin($event)">
+  </app-voter-login>
 
-  <div *ngIf="currentVoter">
-    <h1>Bienvenido, {{ currentVoter.fullName }}</h1>
-    </div>
+  <app-voter-dashboard 
+    *ngIf="currentVoter" 
+    [voter]="currentVoter">
+  </app-voter-dashboard>
 </main>
