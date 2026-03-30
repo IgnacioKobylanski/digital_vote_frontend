@@ -10,16 +10,20 @@ html, body {
 * {
   box-sizing: border-box;
 }
+
 :root {
   --font-main: 'Inter', sans-serif;
+  
   --primary: #2563eb;
   --primary-dark: #1e40af;
+  --primary-bg-subtle: rgba(37, 99, 235, 0.08);
+  
   --secondary: #64748b;
   
   --success: #22c55e;
   --danger: #ef4444;
+  --danger-bg-subtle: rgba(239, 68, 68, 0.1);
   --warning: #f59e0b;
-
 
   --bg-app: #f8fafc;
   --bg-card: #ffffff;
@@ -27,7 +31,6 @@ html, body {
 
   --text-main: #0f172a;
   --text-muted: #64748b;
-  
 
   --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
   --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);

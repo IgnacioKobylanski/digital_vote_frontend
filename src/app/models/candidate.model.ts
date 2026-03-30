@@ -1,8 +1,10 @@
+import { Party } from './party.model';
+
 export interface Candidate {
   id: number;
   name: string;
-  party: string;
   position: string;
-  candidateImageUrl?: string;
-  partyLogoUrl?: string;
+  candidateImg: string; // Matchea con el .cs
+  partyId: number;
+  party?: Party;
 }
