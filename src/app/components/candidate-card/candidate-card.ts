@@ -10,10 +10,11 @@ import { Candidate } from '../../models/candidate.model';
   styleUrls: ['./candidate-card.scss']
 })
 export class CandidateCard {
-  @Input() candidate!: Candidate;
-  @Output() onVote = new EventEmitter<number>();
-
-  voteClick() {
-    this.onVote.emit(this.candidate.id);
+  @Input({ required: true }) candidate!: Candidate;
+  
+  @Output() candidateSelected = new EventEmitter<Candidate>();
+  
+  onVoteClick(): void {
+    this.candidateSelected.emit(this.candidate);
   }
 }

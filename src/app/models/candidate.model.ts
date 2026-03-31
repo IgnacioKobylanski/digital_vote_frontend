@@ -4,7 +4,7 @@ export interface Candidate {
   id: number;
   name: string;
   position: string;
-  candidateImg: string; // Matchea con el .cs
+  candidateImg: string;
   partyId: number;
   party?: Party;
 }

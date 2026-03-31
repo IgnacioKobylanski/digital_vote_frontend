@@ -1,21 +1,22 @@
-<div class="card">
-  <div class="image-wrapper">
-    <img [src]="candidate.candidateImageUrl || 'assets/no-photo.png'" class="main-photo">
-         [alt]="candidate.name" 
-         class="main-photo">
-    
-    @if (candidate.partyLogoUrl) {
-      <img [src]="candidate.partyLogoUrl" class="party-badge">
-    }
+<div class="candidate-card">
+  <div class="candidate-img-wrapper">
+    <img [src]="candidate.candidateImg || 'assets/no-photo.png'" 
+         [alt]="'Foto de ' + candidate.name" 
+         class="candidate-photo">
   </div>
 
-  <div class="card-info">
+  <div class="candidate-info">
     <h3>{{ candidate.name }}</h3>
-    <span class="party-tag">{{ candidate.party }}</span>
-    <p class="position">{{ candidate.position }}</p>
+    <p class="position-tag">{{ candidate.position }}</p>
     
-    <button (click)="voteClick()" class="btn-vote">
-      Vote Now
-    </button>
+    @if (candidate.party?.logoUrl) {
+      <img [src]="candidate.party?.logoUrl" 
+           [alt]="'Logo de ' + candidate.party?.name" 
+           class="party-badge">
+    }
+    
+    <p class="party-name">{{ candidate.party?.name }}</p>
   </div>
+
+  <button class="btn-vote" (click)="onVoteClick()">Votar</button>
 </div>

@@ -6,13 +6,12 @@ import { Voter } from './models/voter.model';
 import { Candidate } from './models/candidate.model';
 
 import { VoterLogin } from './components/voter-login/voter-login';
-import { CandidateCard } from './components/candidate-card/candidate-card';
 import { VoterDashboard } from './components/voter-dashboard/voter-dashboard';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, VoterLogin, CandidateCard, VoterDashboard],
+  imports: [CommonModule, VoterLogin, VoterDashboard],
   templateUrl: './app.html',
   styleUrls: ['./app.scss']
 })
@@ -34,7 +33,6 @@ export class AppComponent {
         this.currentVoter = voter;
         this.errorMsg = '';
         this.loadCandidates();
-        this.cdr.detectChanges();
       },
       error: (err) => {
         this.errorMsg = err.error?.message || err.message || 'Error de conexión con el servidor';
@@ -45,6 +43,15 @@ export class AppComponent {
   }
 
   loadCandidates(): void {
-    console.log('Buscando candidatos para:', this.currentVoter?.fullName);
+    this.voteService.getCandidates().subscribe({
+      next: (data) => {
+        this.candidates = data;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        this.errorMsg = 'Error al cargar los candidatos.';
+        this.cdr.detectChanges();
+      }
+    });
   }
 }

@@ -3,25 +3,28 @@ import { CommonModule } from '@angular/common';
 import { VoteService } from '../../services/vote';
 import { Voter } from '../../models/voter.model';
 import { Candidate } from '../../models/candidate.model';
-import { Vote } from '../../models/vote.model'; // Asegurate de importar el modelo Vote
+import { Vote } from '../../models/vote.model';
+import { CandidateCard } from '../candidate-card/candidate-card';
 
 @Component({
   selector: 'app-voter-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, CandidateCard],
   templateUrl: './voter-dashboard.html',
   styleUrls: ['./voter-dashboard.scss']
 })
 export class VoterDashboard implements OnInit {
   @Input() voter!: Voter;
+  @Input() candidates: Candidate[] = [];
   
-  candidates: Candidate[] = [];
   errorMsg: string = '';
 
   constructor(private voteService: VoteService) {}
 
   ngOnInit(): void {
-    this.loadCandidates();
+    if (this.candidates.length === 0) {
+      this.loadCandidates();
+    }
   }
 
   loadCandidates(): void {
@@ -35,22 +38,19 @@ export class VoterDashboard implements OnInit {
     });
   }
 
-  // Este es el método que te faltaba
   onVote(candidate: Candidate): void {
-    // Confirmación simple antes de mandar el voto
     const confirmacion = confirm(`¿Estás seguro de que querés votar a ${candidate.name}?`);
     
     if (confirmacion && this.voter) {
       const voteData: Vote = {
         candidateId: candidate.id,
-        voterId: this.voter.id, // O el campo que use tu backend para identificar al votante
+        voterId: this.voter.id,
         votedAt: new Date()
       };
 
       this.voteService.submitVote(voteData).subscribe({
         next: () => {
           alert('¡Voto emitido con éxito!');
-          // Acá podrías redirigir a una página de "Gracias" o bloquear la pantalla
         },
         error: (err) => {
           this.errorMsg = 'Hubo un error al procesar tu voto. Por favor, intentá de nuevo.';
