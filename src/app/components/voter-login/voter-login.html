@@ -12,7 +12,9 @@
     Ingresar
   </button>
 
-  <div *ngIf="error" class="error-container">
-    {{ error }}
-  </div>
+  @if (error) {
+    <div class="error-container">
+      {{ error }}
+    </div>
+  }
 </div>

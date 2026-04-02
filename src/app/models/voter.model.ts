@@ -1,6 +1,8 @@
 export interface Voter {
-  id: number;
+  id?: number;
   dni: string;
-  fullName: string;
+  firstName: string;
+  lastName: string;
+  fullName?: string;
   hasVoted: boolean;
 }

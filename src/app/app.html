@@ -1,13 +1,13 @@
 <main class="main-component">
-  <app-voter-login 
-    *ngIf="!currentVoter" 
-    [error]="errorMsg" 
-    (login)="handleLogin($event)">
-  </app-voter-login>
-
-  <app-voter-dashboard 
-    *ngIf="currentVoter" 
-    [voter]="currentVoter"
-    [candidates]="candidates">
-  </app-voter-dashboard>
+  @if (!currentVoter) {
+    <app-voter-login 
+      [error]="errorMsg" 
+      (login)="handleLogin($event)">
+    </app-voter-login>
+  } @else {
+    <app-voter-dashboard 
+      [voter]="currentVoter" 
+      [candidates]="candidates">
+    </app-voter-dashboard>
+  }
 </main>

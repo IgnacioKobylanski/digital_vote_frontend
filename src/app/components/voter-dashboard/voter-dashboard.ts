@@ -18,10 +18,15 @@ export class VoterDashboard implements OnInit {
   @Input() candidates: Candidate[] = [];
   
   errorMsg: string = '';
+  votedSuccessfully: boolean = false;
 
   constructor(private voteService: VoteService) {}
 
   ngOnInit(): void {
+    if (this.voter?.hasVoted) {
+      this.votedSuccessfully = true;
+    }
+
     if (this.candidates.length === 0) {
       this.loadCandidates();
     }
@@ -39,9 +44,18 @@ export class VoterDashboard implements OnInit {
   }
 
   onVote(candidate: Candidate): void {
+    if (!this.voter || this.voter.id === undefined) {
+      return;
+    }
+
+    if (this.voter.hasVoted || this.votedSuccessfully) {
+      this.errorMsg = 'Ya has emitido tu voto.';
+      return;
+    }
+
     const confirmacion = confirm(`¿Estás seguro de que querés votar a ${candidate.name}?`);
     
-    if (confirmacion && this.voter) {
+    if (confirmacion) {
       const voteData: Vote = {
         candidateId: candidate.id,
         voterId: this.voter.id,
@@ -50,6 +64,8 @@ export class VoterDashboard implements OnInit {
 
       this.voteService.submitVote(voteData).subscribe({
         next: () => {
+          this.votedSuccessfully = true;
+          this.voter.hasVoted = true; 
           alert('¡Voto emitido con éxito!');
         },
         error: (err) => {
