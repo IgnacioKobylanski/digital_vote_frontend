@@ -35,7 +35,7 @@ export class AppComponent {
         this.loadCandidates();
       },
       error: (err) => {
-        this.errorMsg = err.error?.message || err.message || 'Error de conexión con el servidor';
+        this.errorMsg = err.error?.message || err.message || 'Error de conexión con el servidor intentelo nuevamente en un momento';
         this.currentVoter = null;
         this.cdr.detectChanges();
       }
