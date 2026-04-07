@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { Observable, throwError, BehaviorSubject } from 'rxjs';
+import { map, catchError, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { Candidate } from '../models/candidate.model';
 import { Vote } from '../models/vote.model';
@@ -12,11 +12,14 @@ import { ElectionResult } from '../models/election-result.model';
 @Injectable({ providedIn: 'root' })
 export class VoteService {
   private baseUrl = environment.apiUrl;
+  private voterSubject = new BehaviorSubject<Voter | null>(null);
+  public voter$ = this.voterSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
   getVoterData(dni: string): Observable<Voter> {
     return this.http.get<Voter>(`${this.baseUrl}/voters/dni/${dni}`).pipe(
+      tap(voter => this.voterSubject.next(voter)),
       map(voter => {
         if (voter.hasVoted) {
           throw 'Este DNI ya figura con un voto emitido.';
@@ -53,5 +56,13 @@ export class VoteService {
 
   getResults(): Observable<ElectionResult[]> {
     return this.http.get<ElectionResult[]>(`${this.baseUrl}/candidates/results`);
+  }
+
+  setVoter(voter: Voter | null): void {
+    this.voterSubject.next(voter);
+  }
+
+  getCurrentVoter(): Voter | null {
+    return this.voterSubject.value;
   }
 }

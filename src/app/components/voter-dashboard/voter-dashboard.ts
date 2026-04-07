@@ -1,5 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { VoteService } from '../../services/vote';
 import { Voter } from '../../models/voter.model';
 import { Candidate } from '../../models/candidate.model';
@@ -14,28 +15,44 @@ import { CandidateCard } from '../candidate-card/candidate-card';
   styleUrls: ['./voter-dashboard.scss']
 })
 export class VoterDashboard implements OnInit {
-  @Input() voter!: Voter;
-  @Input() candidates: Candidate[] = [];
-  
+  voter: Voter | null = null;
+  candidates: Candidate[] = [];
   errorMsg: string = '';
   votedSuccessfully: boolean = false;
 
-  constructor(private voteService: VoteService) {}
+  constructor(
+    private voteService: VoteService,
+    private router: Router,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
-    if (this.voter?.hasVoted) {
+    this.voter = this.voteService.getCurrentVoter();
+
+    if (!this.voter) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    if (this.voter.hasVoted) {
       this.votedSuccessfully = true;
     }
 
-    if (this.candidates.length === 0) {
-      this.loadCandidates();
-    }
+    this.loadCandidates();
   }
 
   loadCandidates(): void {
     this.voteService.getCandidates().subscribe({
-      next: (data) => {
-        this.candidates = data;
+      next: (data: any[]) => {
+        this.candidates = data.map(c => ({
+          ...c,
+          party: c.party || {
+            id: c.partyId,
+            name: c.partyName || c.name_1 || 'Sin Partido',
+            logoUrl: c.logoUrl || ''
+          }
+        }));
+        this.cdr.detectChanges();
       },
       error: () => {
         this.errorMsg = 'No se pudo cargar la lista de candidatos. Reintentá más tarde.';
@@ -65,10 +82,10 @@ export class VoterDashboard implements OnInit {
       this.voteService.submitVote(voteData).subscribe({
         next: () => {
           this.votedSuccessfully = true;
-          this.voter.hasVoted = true; 
+          if (this.voter) this.voter.hasVoted = true; 
           alert('¡Voto emitido con éxito!');
         },
-        error: (err) => {
+        error: () => {
           this.errorMsg = 'Hubo un error al procesar tu voto. Por favor, intentá de nuevo.';
         }
       });

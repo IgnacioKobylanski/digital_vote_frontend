@@ -11,10 +11,13 @@ import { Candidate } from '../../models/candidate.model';
 })
 export class CandidateCard {
   @Input({ required: true }) candidate!: Candidate;
+  @Input() isVoted: boolean = false; // Agregamos esto para saber si bloquear el botón
   
   @Output() candidateSelected = new EventEmitter<Candidate>();
   
   onVoteClick(): void {
-    this.candidateSelected.emit(this.candidate);
+    if (!this.isVoted) {
+      this.candidateSelected.emit(this.candidate);
+    }
   }
 }

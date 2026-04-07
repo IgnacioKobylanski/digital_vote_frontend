@@ -1,22 +1,27 @@
-<div class="candidate-card">
-  <div class="candidate-img-wrapper">
+<div class="card" [class.disabled]="isVoted">
+  <div class="image-wrapper">
     <img [src]="candidate.candidateImg || 'assets/no-photo.png'" 
          [alt]="'Foto de ' + candidate.name" 
-         class="candidate-photo">
-  </div>
-
-  <div class="candidate-info">
-    <h3>{{ candidate.name }}</h3>
-    <p class="position-tag">{{ candidate.position }}</p>
+         class="main-photo">
     
     @if (candidate.party?.logoUrl) {
       <img [src]="candidate.party?.logoUrl" 
            [alt]="'Logo de ' + candidate.party?.name" 
            class="party-badge">
     }
-    
-    <p class="party-name">{{ candidate.party?.name }}</p>
   </div>
 
-  <button class="btn-vote" (click)="onVoteClick()">Votar</button>
+  <div class="card-info">
+    <h3>{{ candidate.name }}</h3>
+    <p class="party-tag">{{ candidate.party?.name }}</p>
+    <p class="position">{{ candidate.position }}</p>
+
+    <button 
+      class="btn-vote" 
+      [disabled]="isVoted" 
+      [class.voted]="isVoted"
+      (click)="onVoteClick()">
+      {{ isVoted ? 'Voto Registrado' : 'Votar' }}
+    </button>
+  </div>
 </div>
