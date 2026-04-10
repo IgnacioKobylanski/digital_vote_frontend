@@ -8,6 +8,7 @@ import { Vote } from '../models/vote.model';
 import { Voter } from '../models/voter.model';
 import { Party } from '../models/party.model';
 import { ElectionResult } from '../models/election-result.model';
+import { Position } from '../models/position.model';
 
 @Injectable({ providedIn: 'root' })
 export class VoteService {
@@ -48,6 +49,10 @@ export class VoteService {
 
   getParties(): Observable<Party[]> {
     return this.http.get<Party[]>(`${this.baseUrl}/parties`);
+  }
+
+  getPositions(): Observable<Position[]> {
+    return this.http.get<Position[]>(`${this.baseUrl}/positions`);
   }
 
   submitVote(voteData: Vote): Observable<any> {
