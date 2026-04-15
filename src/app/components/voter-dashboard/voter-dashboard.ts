@@ -4,8 +4,8 @@ import { Router } from '@angular/router';
 import { VoteService } from '../../services/vote';
 import { Voter } from '../../models/voter.model';
 import { Candidate } from '../../models/candidate.model';
-import { Vote } from '../../models/vote.model';
 import { CandidateCard } from '../candidate-card/candidate-card';
+import { VoteRequest } from '../../models/vote-request.model';
 
 @Component({
   selector: 'app-voter-dashboard',
@@ -61,7 +61,7 @@ export class VoterDashboard implements OnInit {
   }
 
   onVote(candidate: Candidate): void {
-    if (!this.voter || this.voter.id === undefined) {
+    if (!this.voter || !this.voter.dni) {
       return;
     }
 
@@ -73,20 +73,22 @@ export class VoterDashboard implements OnInit {
     const confirmacion = confirm(`¿Estás seguro de que querés votar a ${candidate.name}?`);
     
     if (confirmacion) {
-      const voteData: Vote = {
-        candidateId: candidate.id,
-        voterId: this.voter.id,
-        votedAt: new Date()
+      const voteRequest: VoteRequest = {
+        dni: this.voter.dni,
+        candidateId: Number(candidate.id)
       };
 
-      this.voteService.submitVote(voteData).subscribe({
-        next: () => {
+      this.voteService.submitVote(voteRequest).subscribe({
+        next: (res) => {
           this.votedSuccessfully = true;
-          if (this.voter) this.voter.hasVoted = true; 
-          alert('¡Voto emitido con éxito!');
+          if (this.voter) {
+            this.voter.hasVoted = true; 
+          }
+          alert(res.message || '¡Voto emitido con éxito!');
+          this.cdr.detectChanges();
         },
-        error: () => {
-          this.errorMsg = 'Hubo un error al procesar tu voto. Por favor, intentá de nuevo.';
+        error: (err) => {
+          this.errorMsg = err.message;
         }
       });
     }

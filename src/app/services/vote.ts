@@ -4,11 +4,11 @@ import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { Candidate } from '../models/candidate.model';
-import { Vote } from '../models/vote.model';
 import { Voter } from '../models/voter.model';
 import { Party } from '../models/party.model';
 import { ElectionResult } from '../models/election-result.model';
 import { Position } from '../models/position.model';
+import { VoteRequest } from '../models/vote-request.model';
 
 @Injectable({ providedIn: 'root' })
 export class VoteService {
@@ -39,7 +39,7 @@ export class VoteService {
 
   createVoter(voterData: { dni: string, firstName: string, lastName: string }): Observable<Voter> {
     return this.http.post<Voter>(`${this.baseUrl}/voters`, voterData).pipe(
-      catchError(err => throwError(() => new Error('No se pudo registrar el votante.')))
+      catchError(() => throwError(() => new Error('No se pudo registrar el votante.')))
     );
   }
 
@@ -55,8 +55,14 @@ export class VoteService {
     return this.http.get<Position[]>(`${this.baseUrl}/positions`);
   }
 
-  submitVote(voteData: Vote): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/votes`, voteData);
+  submitVote(voteRequest: VoteRequest): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/votes`, voteRequest).pipe(
+      catchError(err => {
+        // Capturamos el mensaje que viene desde el Backend (IVoteService)
+        const msg = err.error?.message || 'Error al procesar el voto.';
+        return throwError(() => new Error(msg));
+      })
+    );
   }
 
   getResults(): Observable<ElectionResult[]> {
