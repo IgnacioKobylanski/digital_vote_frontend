@@ -1,0 +1,88 @@
+.dialog-wrapper {
+  padding: 8px;
+  font-family: var(--font-main);
+
+  h2 {
+    margin-top: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text-main);
+    font-weight: 700;
+    font-size: 1.5rem;
+
+    mat-icon {
+      color: var(--primary);
+    }
+  }
+
+  p {
+    color: var(--text-muted);
+    font-size: 1rem;
+    margin-bottom: 15px;
+  }
+
+  .candidate-preview {
+    margin: 20px 0;
+    padding: 16px;
+    background-color: var(--bg-app);
+    border-left: 4px solid var(--primary);
+    border-radius: calc(var(--radius) / 1.5);
+
+    .name {
+      display: block;
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .party {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 4px;
+    }
+  }
+
+  .warning-note {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    color: var(--danger);
+    background-color: var(--danger-bg-subtle);
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 20px;
+
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  .btn-confirm {
+    background-color: var(--primary) !important;
+    color: var(--bg-app) !important; 
+    border-radius: var(--radius) !important;
+    font-weight: 600 !important;
+    transition: filter 0.2s;
+
+    &:hover {
+      filter: brightness(1.1);
+    }
+  }
+
+  .btn-cancel {
+    color: var(--secondary) !important;
+    font-weight: 600 !important;
+  }
+}
+
+:host {
+  display: block;
+  background-color: var(--bg-card);
+}

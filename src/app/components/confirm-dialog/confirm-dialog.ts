@@ -1,9 +1,23 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-confirm-dialog',
-  imports: [],
-  template: ` <p>confirm-dialog works!</p> `,
-  styles: ``,
+  standalone: true,
+  imports: [CommonModule, MatDialogModule, MatButtonModule, MatIconModule],
+  templateUrl: './confirm-dialog.html',
+  styleUrl: './confirm-dialog.scss'
 })
-export class ConfirmDialog {}
+export class ConfirmDialogComponent {
+  constructor(
+    public dialogRef: MatDialogRef<ConfirmDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {}
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+}

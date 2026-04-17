@@ -1,0 +1,26 @@
+<div class="dialog-wrapper">
+  <h2 mat-dialog-title>
+    <mat-icon>how_to_vote</mat-icon> {{ data.title }}
+  </h2>
+
+  <mat-dialog-content>
+    <p>Estás a punto de emitir tu voto por:</p>
+
+    <div class="candidate-preview">
+      <span class="name">{{ data.candidateName }}</span>
+      <span class="party">{{ data.party }}</span>
+    </div>
+
+    <div class="warning-note">
+      <mat-icon>warning</mat-icon>
+      <span>Esta acción es definitiva y no se puede deshacer.</span>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onNoClick()" class="btn-cancel">Revisar</button>
+    <button mat-raised-button class="btn-confirm" [mat-dialog-close]="true">
+      Confirmar Voto
+    </button>
+  </mat-dialog-actions>
+</div>

@@ -6,11 +6,14 @@ import { Voter } from '../../models/voter.model';
 import { Candidate } from '../../models/candidate.model';
 import { CandidateCard } from '../candidate-card/candidate-card';
 import { VoteRequest } from '../../models/vote-request.model';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog';
+
 
 @Component({
   selector: 'app-voter-dashboard',
   standalone: true,
-  imports: [CommonModule, CandidateCard],
+  imports: [CommonModule, CandidateCard, MatDialogModule],
   templateUrl: './voter-dashboard.html',
   styleUrls: ['./voter-dashboard.scss']
 })
@@ -23,7 +26,8 @@ export class VoterDashboard implements OnInit {
   constructor(
     private voteService: VoteService,
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -61,36 +65,37 @@ export class VoterDashboard implements OnInit {
   }
 
   onVote(candidate: Candidate): void {
-    if (!this.voter || !this.voter.dni) {
-      return;
-    }
+  if (!this.voter || !this.voter.dni || this.votedSuccessfully) return;
 
-    if (this.voter.hasVoted || this.votedSuccessfully) {
-      this.errorMsg = 'Ya has emitido tu voto.';
-      return;
+  // Abrimos el diálogo pasándole la data (los PROPS)
+  const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+    width: '400px',
+    data: {
+      title: 'Confirmar Votación',
+      candidateName: candidate.name,
+      party: candidate.party?.name || 'Sin Partido'
     }
+  });
 
-    const confirmacion = confirm(`¿Estás seguro de que querés votar a ${candidate.name}?`);
-    
-    if (confirmacion) {
+  dialogRef.afterClosed().subscribe(result => {
+    // result es lo que devuelve el botón [mat-dialog-close]="true"
+    if (result) {
       const voteRequest: VoteRequest = {
-        dni: this.voter.dni,
+        dni: this.voter!.dni,
         candidateId: Number(candidate.id)
       };
 
       this.voteService.submitVote(voteRequest).subscribe({
         next: (res) => {
           this.votedSuccessfully = true;
-          if (this.voter) {
-            this.voter.hasVoted = true; 
-          }
-          alert(res.message || '¡Voto emitido con éxito!');
+          if (this.voter) this.voter.hasVoted = true;
           this.cdr.detectChanges();
         },
         error: (err) => {
-          this.errorMsg = err.message;
+          this.errorMsg = err.message || 'Error al registrar el voto';
         }
       });
     }
-  }
+  });
+}
 }
